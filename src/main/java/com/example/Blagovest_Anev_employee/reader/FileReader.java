@@ -17,6 +17,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -61,14 +63,32 @@ public class FileReader {
                 .map(row -> new Employee(
                         Long.parseLong(row[0]),
                         Long.parseLong(row[1].trim()),
-                        LocalDate.parse(row[2].trim()),
+                        parseDate(row[2].trim()),
                         replaceMissingData(row[3])))
                 .collect(Collectors.toSet()); //I don't want equal imports to be assumed as valid
     }
 
     private LocalDate replaceMissingData(String data) { //TODO - this could be adjusted with library parser, but additional time will be consumed investigating library documentation
-        return data.equals(" NULL") ? LocalDate.now() : LocalDate.parse(data.trim());
+        return data.equals(" NULL") ? LocalDate.now() : parseDate(data.trim());
     }
 
+    private LocalDate parseDate(String dateStr) { //TODO - this will be better to be implemented with maybe Chain of responsibilities design pattern
+        DateTimeFormatter[] formatters = {
+                DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+                DateTimeFormatter.ofPattern("dd-MM-yyyy"),
+                DateTimeFormatter.ofPattern("MM/dd/yyyy"),
+                DateTimeFormatter.ofPattern("MM-dd-yyyy"),
+                DateTimeFormatter.ofPattern("MM dd yyyy"),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd"),
+        };
+        for (DateTimeFormatter formatter : formatters) {
+            try {
+                return LocalDate.parse(dateStr, formatter);
+            } catch (DateTimeParseException ignore) {
+                //skipping the error, during the search for appropriate format handler
+            }
+        }
+        throw new IllegalArgumentException("Invalid date format: " + dateStr);
+    }
 
 }
