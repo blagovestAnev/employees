@@ -66,10 +66,6 @@ public class FileReader {
                 .collect(Collectors.toSet()); //I don't want equal imports to be assumed as valid
     }
 
-//    private long calculateMonths(String startDate, String endDate) {
-//        return ChronoUnit.MONTHS.between(LocalDate.parse(startDate.trim()), replaceMissingData(endDate));
-//    }
-
     private LocalDate replaceMissingData(String data) { //TODO - this could be adjusted with library parser, but additional time will be consumed investigating library documentation
         return data.equals(" NULL") ? LocalDate.now() : LocalDate.parse(data.trim());
     }

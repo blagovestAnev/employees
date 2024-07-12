@@ -15,7 +15,6 @@ public class Employee {
     private long projectId;
     private LocalDate dateFrom;
     private LocalDate dateTo;
-//    private long assignmentPeriodInMonths;
 
 }
 
