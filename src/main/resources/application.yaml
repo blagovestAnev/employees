@@ -1,0 +1,9 @@
+#Spring
+spring:
+  application:
+    name: Blagovest-Anev-employee
+
+#Custom
+source-file-path: classpath:Data.csv #C:\Users\Lion Avenger\IdeaProjects\Blagovest-Anev-employees\src\main\resources\data.csv
+
+
